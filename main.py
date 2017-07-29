@@ -31,7 +31,7 @@ def how(cont):
 				break
 
 	return n
-
+#'Кто больше нравится?'
 kol=len(os.listdir('data'))
 
 while True:
@@ -46,7 +46,7 @@ while True:
 		if nom>kol:
 			send(i[0], 'Ты уже всех оценил..')
 		else:
-			send(i[0], str(nom-1)+str(nom))
+			send(i[0], '', [get(nom-1), get(nom)])
 
 			text=how(i[1].lower())
 			if text==1:

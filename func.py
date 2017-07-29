@@ -4,7 +4,7 @@ with open('set.txt', 'r') as file:
 	vk=vk_api.VkApi(token=json.loads(file.read())['token'])
 vk.auth()
 
-send=lambda user, cont: vk.method('messages.send', {'user_id':user, 'message':cont})
+send=lambda user, cont, img=[]: vk.method('messages.send', {'user_id':user, 'message':cont, 'attachment':','.join(img)})
 
 def read():
 	cont=[]
@@ -12,3 +12,7 @@ def read():
 		if not i['read_state']:
 			cont.append([i['user_id'], i['body']])
 	return cont[::-1]
+
+def get(name):
+	with open('set.txt', 'r') as file:
+		return json.loads(file.read())['image'][name-1]
