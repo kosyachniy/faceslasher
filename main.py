@@ -1,5 +1,5 @@
 from func import *
-import time
+import time, os 
 
 mess={'хай', 'привет', 'здарова', 'здаров', 'ghbdtn', '[fq', 'hay', 'hello', 'хело', 'хелло', 'хеллоу', 'хелоу', 'хей', 'здрасте', 'здрасть', 'здраст', 'эй', 'приветики', 'пивет', 'здравствуйте', 'здравствуй', 'здраствуй', 'здраствуйте', 'добро пожаловать', 'рад познакомиться', 'будем знакомы', 'хой', 'хеу'}
 
@@ -32,13 +32,27 @@ def how(cont):
 
 	return n
 
+kol=len(os.listdir('data'))
+
 while True:
 	for i in read():
-		text=how(i[1].lower())
-		if text==1:
-			send(i[0], 1)
-		elif text==2:
-			send(i[0], 2)
+		name='db/'+str(i[0])+'.txt'
+		if not os.path.exists(name):
+			with open(name, 'w') as file:
+				print(1, file=file)
+		with open(name, 'r') as file:
+			nom=file.read().count('\n')+1
+
+		if nom>kol:
+			send(i[0], 'Ты уже всех оценил..')
 		else:
-			send(i[0], 'Бред какой-то написал')
+			send(i[0], str(nom-1)+str(nom))
+
+			text=how(i[1].lower())
+			if text==1:
+				send(i[0], 1)
+			elif text==2:
+				send(i[0], 2)
+			else:
+				send(i[0], 'Бред какой-то написал')
 	time.sleep(1)
