@@ -16,3 +16,5 @@ def read():
 def get(name):
 	with open('set.txt', 'r') as file:
 		return json.loads(file.read())['image'][name-1]
+
+pe={}
