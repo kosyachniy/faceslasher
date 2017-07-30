@@ -1,4 +1,5 @@
 set.txt
 __pycache__/
 data/
-db/
+db/**
++/
