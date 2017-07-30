@@ -30,14 +30,10 @@ def how(cont):
 			else:
 				n=0
 				break
-	if n: return n
+	return n if n else 0
 
-	#for i in text:
-	#	if i in hello:
-	#		return 3
-	return 0
-
-kol=len(os.listdir('data'))
+with open('set.txt', 'r') as file:
+	kol=len(json.loads(file.read())['image'])
 
 while True:
 	for i in read():
@@ -52,9 +48,11 @@ while True:
 
 		if nom>kol:
 			send(u, 'Ты уже всех оценил..')
+			send(u, 'Твой личный рейтинг:')
+			for i in range(len(a)):
+				send(u, str(i+1)+'-ое место', [get(int(a[i]))])
 		else:
 			text=how(i[1].lower()) if u in pe else 3
-			#Первое сравнение с новым, 1/2 - действующие
 			if text in (1, 2):
 				if text==1:
 					pe[u][2]+=pe[u][4]
