@@ -47,31 +47,21 @@ while True:
 			with open(name, 'w') as file:
 				print(1, file=file)
 		with open(name, 'r') as file:
-			a=file.read().split('\n')
-			nom=len(a)
+			a=file.read().split('\n')[:-1]
+			nom=len(a)+1
 
 		if nom>kol:
 			send(i[0], 'Ты уже всех оценил..')
 		else:
 			text=how(i[1].lower())
 			print(text, nom, pe)
+			#Первое сравнение с новым, 1/2 - действующие
 			if text in (1, 2):
-				#b interval shift t j
-				if i[0] not in pe: pe[i[0]]=[nom, len(a), 0, 0, 0]
-
-				pe[i[0]][3]=pe[i[0]][1]%2
-				pe[i[0]][1]//=2
-				pe[i[0]][4]=(pe[i[0]][1])+pe[i[0]][3]
-
-				try:
-					send(i[0], '', [get(int(a[pe[i[0]][4]+pe[i[0]][2]-1])), get(nom)])
-				except ValueError:
-					print('Excess space')
-
-				if text==1:
-					pe[i[0]][2]+=pe[i[0]][4]
-				elif text==2:
-					if not pe[i[0]][3]: pe[i[0]][1]-=1
+				#if i[0] not in pe: pe[i[0]]=[nom, len(a), 0, 0, 0]
+				if pe[i[0]][1]>=1:
+					pe[i[0]][3]=pe[i[0]][1]%2
+					pe[i[0]][1]//=2
+					pe[i[0]][4]=pe[i[0]][1]+pe[i[0]][3]
 
 				if pe[i[0]][1]<1:
 					a.append(nom)
@@ -81,12 +71,20 @@ while True:
 						for j in a:
 							if j:
 								print(j, file=file)
+					send(i[0], 'Записал!')
+				else:
+					send(i[0], '', [get(int(a[pe[i[0]][4]+pe[i[0]][2]-1])), get(nom)])
+
+					if text==1:
+						pe[i[0]][2]+=pe[i[0]][4]
+					elif text==2:
+						if not pe[i[0]][3]: pe[i[0]][1]-=1
+
+					print('!!', pe[i[0]])
 			elif text==3:
+				#b interval shift t j
 				pe[i[0]]=[nom, len(a), 0, 0, 0]
-				pe[i[0]][3]=pe[i[0]][1]%2
-				pe[i[0]][1]//=2
-				pe[i[0]][4]=(pe[i[0]][1])+pe[i[0]][3]
-				send(i[0], '', [get(int(a[pe[i[0]][4]+pe[i[0]][2]-1])), get(nom)])
+				send(i[0], '', [get(int(a[pe[i[0]][1]//2+pe[i[0]][1]%2+pe[i[0]][2]-1])), get(nom)])
 			else:
 				send(i[0], 'Бред какой-то написал')
 	time.sleep(1)
