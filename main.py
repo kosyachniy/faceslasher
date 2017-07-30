@@ -32,17 +32,17 @@ def how(cont):
 				break
 	if n: return n
 
-	for i in text:
-		if i in hello:
-			return 3
+	#for i in text:
+	#	if i in hello:
+	#		return 3
 	return 0
 
-#'Кто больше нравится?'
 kol=len(os.listdir('data'))
 
 while True:
 	for i in read():
-		name='db/'+str(i[0])+'.txt'
+		u=i[0]
+		name='db/'+str(u)+'.txt'
 		if not os.path.exists(name):
 			with open(name, 'w') as file:
 				print(1, file=file)
@@ -51,40 +51,38 @@ while True:
 			nom=len(a)+1
 
 		if nom>kol:
-			send(i[0], 'Ты уже всех оценил..')
+			send(u, 'Ты уже всех оценил..')
 		else:
-			text=how(i[1].lower())
-			print(text, nom, pe)
+			text=how(i[1].lower()) if u in pe else 3
 			#Первое сравнение с новым, 1/2 - действующие
 			if text in (1, 2):
-				#if i[0] not in pe: pe[i[0]]=[nom, len(a), 0, 0, 0]
-				if pe[i[0]][1]>=1:
-					pe[i[0]][3]=pe[i[0]][1]%2
-					pe[i[0]][1]//=2
-					pe[i[0]][4]=pe[i[0]][1]+pe[i[0]][3]
-
-				if pe[i[0]][1]<1:
+				if text==1:
+					pe[u][2]+=pe[u][4]
+				elif text==2:
+					if not pe[u][3]: pe[u][1]-=1
+				if pe[u][1]<1:
 					a.append(nom)
-					for j in range(pe[i[0]][2]+1, len(a))[::-1]:
+					for j in range(pe[u][2]+1, len(a))[::-1]:
 						a[j], a[j-1]=a[j-1], a[j]
 					with open(name, 'w') as file:
 						for j in a:
 							if j:
 								print(j, file=file)
-					send(i[0], 'Записал!')
+					del pe[u]
+					#send(u, 'Следующая девушка!')
 				else:
-					send(i[0], '', [get(int(a[pe[i[0]][4]+pe[i[0]][2]-1])), get(nom)])
-
-					if text==1:
-						pe[i[0]][2]+=pe[i[0]][4]
-					elif text==2:
-						if not pe[i[0]][3]: pe[i[0]][1]-=1
-
-					print('!!', pe[i[0]])
+					pe[u][3]=pe[u][1]%2
+					pe[u][1]//=2
+					pe[u][4]=pe[u][1]+pe[u][3]
+					send(u, '', [get(int(a[pe[u][4]+pe[u][2]-1])), get(nom)])
 			elif text==3:
 				#b interval shift t j
-				pe[i[0]]=[nom, len(a), 0, 0, 0]
-				send(i[0], '', [get(int(a[pe[i[0]][1]//2+pe[i[0]][1]%2+pe[i[0]][2]-1])), get(nom)])
+				pe[u]=[nom, len(a), 0, 0, 0]
+				
+				pe[u][3]=pe[u][1]%2
+				pe[u][1]//=2
+				pe[u][4]=pe[u][1]+pe[u][3]
+				send(u, 'Кто больше нравится?', [get(int(a[pe[u][4]+pe[u][2]-1])), get(nom)])
 			else:
-				send(i[0], 'Бред какой-то написал')
+				send(u, 'Бред какой-то написал')
 	time.sleep(1)
